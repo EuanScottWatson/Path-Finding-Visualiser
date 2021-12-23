@@ -1,12 +1,12 @@
-class BFS:
+class DFS:
     def __init__(self, start, w, h) -> None:
         self.visited = []
-        self.queue = [start]
+        self.stack = [start]
         self.w, self.h = w, h
         self.parents = {}
 
     def step(self):
-        next = self.queue.pop(0)
+        next = self.stack.pop(0)
         if next in self.visited:
             return self.step()
         self.visited.append(next)
@@ -20,9 +20,10 @@ class BFS:
 
         for n in to_visit:
             if (n not in self.visited and 
-                0 <= n[0] <= self.w and 
-                0 <= n[1] <= self.h):
-                self.queue.append(n)
+                0 <= n[0] < self.w and 
+                0 <= n[1] < self.h):
+                print("\t", n)
+                self.stack.insert(0, n)
                 self.parents[n] = next
         
         return self.visited

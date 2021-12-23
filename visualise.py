@@ -1,4 +1,5 @@
 from bfs import BFS
+from dfs import DFS
 import pygame, os
 from pygame.locals import *
 import numpy as np
@@ -14,6 +15,7 @@ class Path:
         self.end = (20, 10)
 
         self.done = False
+        self.pause = False
         self.visited = []
         self.path = []
 
@@ -26,7 +28,7 @@ class Path:
                 if (i, j) in self.visited:
                     pygame.draw.rect(screen, (234, 255, 52), rect)
                 if (i, j) in self.path:
-                    pygame.draw.rect(screen, (0, 0, 0), rect)
+                    pygame.draw.rect(screen, (100, 255, 100), rect)
                 if (i, j) == self.start:
                     pygame.draw.rect(screen, (0, 255, 0), rect)
                 elif (i, j) == self.end:
@@ -46,6 +48,8 @@ class Path:
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     return True
+                if event.key == K_SPACE:
+                    self.pause = not self.pause
 
     def display_screen(self, screen):
         screen.fill((255, 255, 255))
@@ -56,7 +60,7 @@ class Path:
         pygame.display.flip()
 
     def run_logic(self):
-        if not self.done:
+        if not self.done and not self.pause:
             self.bfs_step()
 
     def bfs_step(self):
