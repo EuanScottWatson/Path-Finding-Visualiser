@@ -5,9 +5,9 @@ class DFS:
         self.w, self.h = w, h
         self.parents = {}
 
-    def step(self, walls):
+    def step(self, walls, end=None):
         next = self.stack.pop(0)
-        if next in self.visited:
+        if next in self.visited or next in walls:
             return self.step(walls)
         self.visited.append(next)
 

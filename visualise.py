@@ -18,6 +18,7 @@ class Path:
         self.pause = True
         self.visited = []
         self.path = []
+        self.path_lines = []
 
         self.algorithm = BFS(self.start, w, h)
 
@@ -42,6 +43,9 @@ class Path:
         for i in range(self.height):
             pygame.draw.line(screen, (0, 0, 0), (0, i * self.grid_size), (self.width * self.grid_size, i * self.grid_size), 1)
 
+        if len(self.path_lines) >= 2:
+            pygame.draw.lines(screen, (0, 0, 0), False, self.path_lines, 2)
+
 
     def events(self):
         for event in pygame.event.get():
@@ -53,10 +57,9 @@ class Path:
                 if event.key == K_SPACE:
                     self.pause = not self.pause
             if event.type == MOUSEBUTTONDOWN:
-                print("PRESS")
                 pos = pygame.mouse.get_pos()
                 wall = (pos[0] // self.grid_size, pos[1] // self.grid_size)
-                if pygame.mouse.get_pressed()[0]:
+                if pygame.mouse.get_pressed()[0] and wall not in self.visited:
                     self.walls.append(wall)
                 elif pygame.mouse.get_pressed()[2]:
                     if wall in self.walls:
@@ -79,6 +82,15 @@ class Path:
         if self.end in self.visited:
             self.done = True
             self.path = self.algorithm.backtrace(self.end, self.start)
+            self.get_lines()
+
+    def get_centre(self, p):
+        return (p[0] * self.grid_size + self.grid_size // 2, p[1] * self.grid_size + self.grid_size // 2)
+    
+    def get_lines(self):
+        for p in self.path:
+            self.path_lines.append(self.get_centre(p))
+        self.path_lines.append(self.get_centre(self.start))
         
 
 def main():
