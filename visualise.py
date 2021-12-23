@@ -1,3 +1,4 @@
+from astar import AStar
 from bfs import BFS
 from dfs import DFS
 import pygame, os
@@ -20,7 +21,7 @@ class Path:
         self.path = []
         self.path_lines = []
 
-        self.algorithm = BFS(self.start, w, h)
+        self.algorithm = AStar(self.start, w, h)
 
     def display(self, screen):
         for i in range(self.width):
@@ -78,7 +79,7 @@ class Path:
             self.algorithm_step()
 
     def algorithm_step(self):
-        self.visited = self.algorithm.step(self.walls)
+        self.visited = self.algorithm.step(self.walls, self.end)
         if self.end in self.visited:
             self.done = True
             self.path = self.algorithm.backtrace(self.end, self.start)
