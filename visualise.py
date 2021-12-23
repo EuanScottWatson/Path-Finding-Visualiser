@@ -9,17 +9,17 @@ class Path:
     def __init__(self, w, h, grid_size=25):
         self.width, self.height = w, h
         self.grid_size = grid_size
-        self.grid = np.zeros((w, h))
 
         self.start = (5, 10)
         self.end = (20, 10)
+        self.walls = []
 
         self.done = False
-        self.pause = False
+        self.pause = True
         self.visited = []
         self.path = []
 
-        self.bfs = BFS(self.start, w, h)
+        self.algorithm = BFS(self.start, w, h)
 
     def display(self, screen):
         for i in range(self.width):
@@ -33,6 +33,8 @@ class Path:
                     pygame.draw.rect(screen, (0, 255, 0), rect)
                 elif (i, j) == self.end:
                     pygame.draw.rect(screen, (255, 0, 0), rect)
+                if (i, j) in self.walls:
+                    pygame.draw.rect(screen, (0, 0, 0), rect)
 
         for i in range(self.width):
             pygame.draw.line(screen, (0, 0, 0), (i * self.grid_size, 0), (i * self.grid_size, self.height * self.grid_size), 1)
@@ -50,6 +52,15 @@ class Path:
                     return True
                 if event.key == K_SPACE:
                     self.pause = not self.pause
+            if event.type == MOUSEBUTTONDOWN:
+                print("PRESS")
+                pos = pygame.mouse.get_pos()
+                wall = (pos[0] // self.grid_size, pos[1] // self.grid_size)
+                if pygame.mouse.get_pressed()[0]:
+                    self.walls.append(wall)
+                elif pygame.mouse.get_pressed()[2]:
+                    if wall in self.walls:
+                        self.walls.remove(wall)
 
     def display_screen(self, screen):
         screen.fill((255, 255, 255))
@@ -61,13 +72,13 @@ class Path:
 
     def run_logic(self):
         if not self.done and not self.pause:
-            self.bfs_step()
+            self.algorithm_step()
 
-    def bfs_step(self):
-        self.visited = self.bfs.step()
+    def algorithm_step(self):
+        self.visited = self.algorithm.step(self.walls)
         if self.end in self.visited:
             self.done = True
-            self.path = self.bfs.backtrace(self.end, self.start)
+            self.path = self.algorithm.backtrace(self.end, self.start)
         
 
 def main():

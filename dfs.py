@@ -5,10 +5,10 @@ class DFS:
         self.w, self.h = w, h
         self.parents = {}
 
-    def step(self):
+    def step(self, walls):
         next = self.stack.pop(0)
         if next in self.visited:
-            return self.step()
+            return self.step(walls)
         self.visited.append(next)
 
         to_visit = [
@@ -20,6 +20,7 @@ class DFS:
 
         for n in to_visit:
             if (n not in self.visited and 
+                n not in walls and
                 0 <= n[0] < self.w and 
                 0 <= n[1] < self.h):
                 print("\t", n)
