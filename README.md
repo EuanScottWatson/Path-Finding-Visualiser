@@ -6,4 +6,6 @@ python visualise.py <algorithm>
 ```
 Where `algorithm` is one of `BFS`, `DFS` or `AStar`. <br>
 Left click to add walls, right click to remove walls. You can press the space bar to start and pause the path finding. While paused you can also add extra blocks if it is on a cell that has not yet been visited. <br>
-Enjoy :)
+Here is an example of the A* path finder finding a path through walls:
+
+![A*](/images/astar.png)
