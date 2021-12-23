@@ -4,10 +4,11 @@ from dfs import DFS
 import pygame, os
 from pygame.locals import *
 import numpy as np
+import sys
 
 
 class Path:
-    def __init__(self, w, h, grid_size=25):
+    def __init__(self, w, h, grid_size=25, algo="BFS"):
         self.width, self.height = w, h
         self.grid_size = grid_size
 
@@ -21,7 +22,12 @@ class Path:
         self.path = []
         self.path_lines = []
 
-        self.algorithm = AStar(self.start, w, h)
+        if algo == "BFS":
+            self.algorithm = BFS(self.start, w, h)
+        elif algo == "DFS":
+            self.algorithm = DFS(self.start, w, h)
+        elif algo == "AStar":
+            self.algorithm = AStar(self.start, w, h)
 
     def display(self, screen):
         for i in range(self.width):
@@ -94,7 +100,7 @@ class Path:
         self.path_lines.append(self.get_centre(self.start))
         
 
-def main():
+def main(algo="BFS"):
     pygame.init()
     pygame.font.init()
     pygame.display.set_caption("Path Finding")
@@ -108,7 +114,7 @@ def main():
 
     done = False
     clock = pygame.time.Clock()
-    path = Path(width // grid_size, height // grid_size, grid_size=grid_size)
+    path = Path(width // grid_size, height // grid_size, grid_size=grid_size, algo=algo)
 
     while not done:
         done = path.events()
@@ -119,4 +125,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1:
+        if sys.argv[1] in ["BFS", "DFS", "AStar"]:
+            main(sys.argv[1])
+        else:
+            print("Algorithm %s not supported.\nTry BFS, DFS or AStar" % sys.argv[1])
+    else:
+        main()

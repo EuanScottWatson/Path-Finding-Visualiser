@@ -23,7 +23,6 @@ class DFS:
                 n not in walls and
                 0 <= n[0] < self.w and 
                 0 <= n[1] < self.h):
-                print("\t", n)
                 self.stack.insert(0, n)
                 self.parents[n] = next
         
