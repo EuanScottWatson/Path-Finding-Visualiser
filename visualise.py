@@ -3,31 +3,19 @@ from bfs import BFS
 from dfs import DFS
 import pygame, os
 from pygame.locals import *
-import numpy as np
 import sys
+from random import randint
 
 
 class Path:
     def __init__(self, w, h, grid_size=25, algo="BFS"):
         self.width, self.height = w, h
         self.grid_size = grid_size
+        self.algo = algo
 
-        self.start = (5, 10)
-        self.end = (20, 10)
-        self.walls = []
-
-        self.done = False
-        self.pause = True
-        self.visited = []
-        self.path = []
-        self.path_lines = []
-
-        if algo == "BFS":
-            self.algorithm = BFS(self.start, w, h)
-        elif algo == "DFS":
-            self.algorithm = DFS(self.start, w, h)
-        elif algo == "AStar":
-            self.algorithm = AStar(self.start, w, h)
+        self.start = (randint(0, w), randint(0, h))
+        self.end = (randint(0, w), randint(0, h))
+        self.reset()
 
     def display(self, screen):
         for i in range(self.width):
@@ -63,6 +51,8 @@ class Path:
                     return True
                 if event.key == K_SPACE:
                     self.pause = not self.pause
+                if event.key == K_r:
+                    self.reset()
             if event.type == MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 wall = (pos[0] // self.grid_size, pos[1] // self.grid_size)
@@ -98,6 +88,22 @@ class Path:
         for p in self.path:
             self.path_lines.append(self.get_centre(p))
         self.path_lines.append(self.get_centre(self.start))
+
+    def reset(self):
+        self.walls = []
+
+        self.done = False
+        self.pause = True
+        self.visited = []
+        self.path = []
+        self.path_lines = []
+
+        if self.algo == "BFS":
+            self.algorithm = BFS(self.start, self.width, self.height)
+        elif self.algo == "DFS":
+            self.algorithm = DFS(self.start, self.width, self.height)
+        elif self.algo == "AStar":
+            self.algorithm = AStar(self.start, self.width, self.height)
         
 
 def main(algo="BFS"):
@@ -107,7 +113,7 @@ def main(algo="BFS"):
 
     os.environ['SDL_VIDEO_CENTERED'] = "True"
 
-    width, height = 650, 650
+    width, height = 1000, 800
     grid_size = 25
 
     screen = pygame.display.set_mode((width, height))
